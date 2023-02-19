@@ -23,6 +23,8 @@ library(scico)
 library(extrafont)
 library(sf)
 library(rnaturalearth)
+library(hms)
+library(ggstatsplot)
 
 # round any function
 round_25 <- function(x, accuracy = 25000) {
@@ -217,11 +219,13 @@ land <- st_transform(land, "+proj=laea +lon_0=80.859375 +lat_0=20.6486698 +datum
 ```
 
 ```{r, echo=FALSE}
+#get proportion of checklist
+
 # make plot
 india_states <- st_transform(india_states, "+proj=laea +lon_0=80.859375 +lat_0=20.6486698 +datum=WGS84 +units=m +no_defs")
 bbox <- st_bbox(india_states)
 
-# get a plot of number of checklists across grids 
+# plot of all ebird checklists
 plotNchk <-
   ggplot() +
   geom_sf(data = land, fill = "grey90", col = NA) +
@@ -236,7 +240,7 @@ plotNchk <-
     trans = "log10",
     limits = c(1, 50000),
     breaks = 10^c(1:5)
-  ) +
+  ) + 
   coord_sf(xlim = bbox[c("xmin", "xmax")], ylim = bbox[c("ymin", "ymax")]) +
   theme_few() +
   theme(
@@ -253,6 +257,7 @@ ggsave(plotNchk,
   width = 10, device = png(), dpi = 300
 )
 dev.off()
+print (plotNchk)
 ```
 
 ![Number of checklists over time](figs/fig_number_checklists_25km.png)
@@ -310,3 +315,180 @@ dev.off()
 ```{r}
 save.image(file = "data/01_ebd-India.RData")
 ```
+
+## basic plots for overall visualization (based on Cornell best practices webpage)
+
+#Topic1:checklist duration
+```{r}
+breaks <- seq(0, 5, by = 0.5)
+labels <- breaks[-length(breaks)] + diff(breaks) / 2
+ebird_dur <- ebd_in %>% 
+  mutate(dur_bins = cut(duration_minutes / 60, 
+                        breaks = breaks, 
+                        labels = labels,
+                        include.lowest = TRUE),
+         dur_bins = as.numeric(as.character(dur_bins))) %>% 
+  group_by(dur_bins) %>% 
+  summarise(n_checklists = n(),
+            n_detected = sum(nchk),
+            det_freq = mean(nchk))
+
+# histogram
+g_dur_hist <- ggplot(ebird_dur) +
+  aes(x = dur_bins, y = n_checklists) +
+  geom_segment(aes(xend = dur_bins, y = 0, yend = n_checklists),
+               color = "grey50") +
+  geom_point() +
+  scale_x_continuous(breaks = 0:5) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(x = "Checklist duration (hours)",
+       y = "# checklists",
+       title = "Distribution of checklist durations")
+print (g_dur_hist)
+# export data
+ggsave(g_dur_hist,
+  filename = "figs/fig_distribution_of_checklist_durations.png", height = 10,
+  width = 15, device = png(), dpi = 300
+)
+dev.off()
+```
+![Checklist Duration](figs/fig_distribution_of_checklist_durations.png)
+
+#Topic2: distance travelled
+```{r}
+# clean up variables
+ebird_travel <- ebd_in %>%
+   mutate(
+    # effort_distance_km to 0 for non-travelling counts
+    effort_distance_km = if_else(protocol_type != "Traveling", 
+                                 0, effort_distance_km))
+# summarize data by 500m bins
+breaks <- seq(0, 5, by = 0.5)
+labels <- breaks[-length(breaks)] + diff(breaks) / 2
+ebird_dist <- ebird_travel %>% 
+  mutate(dist_bins = cut(effort_distance_km, 
+                         breaks = breaks, 
+                         labels = labels,
+                         include.lowest = TRUE),
+         dist_bins = as.numeric(as.character(dist_bins))) %>% 
+  group_by(dist_bins) %>% 
+  summarise(n_checklists = n(),
+            n_detected = sum(nchk),
+            det_freq = mean(nchk))
+# histogram
+g_dist_hist <- ggplot(ebird_dist) +
+  aes(x = dist_bins, y = n_checklists) +
+  geom_segment(aes(xend = dist_bins, y = 0, yend = n_checklists),
+               color = "grey50") +
+  geom_point() +
+  scale_x_continuous(breaks = 0:5) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(x = "Distance travelled (km)",
+       y = "# checklists",
+       title = "Distribution of distance travelled")
+print (g_dist_hist)
+
+# export data
+ggsave(g_dist_hist,
+  filename = "figs/fig_distribution_of_distance_travelled.png", height = 10,
+  width = 15, device = png(), dpi = 300
+)
+dev.off()
+```
+![Distance travelled](figs/fig_distribution_of_distance_travelled.png)
+
+#Topic3: observers
+```{r}
+# Number of Observers
+# summarize data
+breaks <- 0:24
+labels <- 1:24
+ebird_obs_24 <- ebd_in %>% 
+  mutate(obs_bins = cut(number_observers, 
+                        breaks = breaks, 
+                        label = labels,
+                        include.lowest = TRUE),
+         obs_bins = as.numeric(as.character(obs_bins))) %>% 
+  group_by(obs_bins) %>% 
+  summarise(n_checklists = n(),
+            n_detected = sum(nchk),
+            det_freq = mean(nchk))
+# histogram
+g_obs_hist <- ggplot(ebird_obs_24) +
+  aes(x = obs_bins, y = n_checklists) +
+  geom_segment(aes(xend = obs_bins, y = 0, yend = n_checklists),
+               color = "grey50") +
+  geom_point() +
+  scale_x_continuous(breaks = 1:24) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(x = "# observers",
+       y = "# checklists",
+       title = "Distribution of the number of observers")
+print (g_obs_hist)
+
+```
+![Number of Observers](figs/fig_distribution_of_number_of_observers.png)
+
+## mapping proportion of grids with less than 50 checklists in 25x25km grids
+```{r }
+print(ebd_summary$p_rep)
+summary(tot_n_chklist)
+
+subset_tot <- subset(tot_n_chklist, nchk < 50)
+
+# plot of all ebird checklists
+plotNchk <-
+  ggplot() +
+  geom_sf(data = land, fill = "grey90", col = NA) +
+  geom_tile(
+    data = subset_tot,
+    aes(X, Y, fill = nchk), lwd = 0.5, col = "grey90"
+  ) +
+  geom_sf(data = india_states, fill = NA, col = "black", lwd = 0.3) +
+  scale_fill_scico(
+    palette = "lajolla",
+    direction = -1,
+    trans = "log10",
+    limits = c(1,50),
+  ) + 
+  coord_sf(xlim = bbox[c("xmin", "xmax")], ylim = bbox[c("ymin", "ymax")]) +
+  theme_few() +
+  theme(
+    legend.position = "right",
+    axis.title = element_blank(),
+    axis.text.y = element_text(angle = 90),
+    panel.background = element_rect(fill = "lightblue")
+  ) +
+  labs(fill = "number\nof\nchecklists")
+
+# export data
+ggsave(plotNchk,
+  filename = "figs/fig_number_checklists_lessthan50_25km.png", height = 10,
+  width = 10, device = png(), dpi = 300
+)
+dev.off()
+print (plotNchk)
+```
+![Map of Grids with less than 25 checklists/Low e-bird effort](figs/fig_number_checklists_lessthan50_25km.png)
+
+## mapping proportion of grids with less than 10 checklists in 25x25km grids
+```{r}
+subset_lessthan10 <- subset(subset_tot, nchk <10)
+summary(subset_lessthan10)
+plotNchk10 <- ggplot() + geom_sf(data = land, fill = "grey90", col = NA) + geom_tile(data = subset_lessthan10,
+    aes(X, Y, fill="red"), lwd = 0.5, col = "grey90") + geom_sf(data = india_states, fill = NA, col = "black", lwd = 0.3) + coord_sf(xlim = bbox[c("xmin", "xmax")], ylim = bbox[c("ymin", "ymax")]) + theme_few() + theme(legend.position = "none",
+    axis.title = element_blank(),
+    axis.text.y = element_text(angle = 90),
+    panel.background = element_rect(fill = "lightblue")
+  ) + labs(title = "Number of checkslists < 10 in 25x25 grids")
+
+# export data
+ggsave(plotNchk10,
+  filename = "figs/fig_number_checklists_lessthan10_25km.png", height = 10,
+  width = 10, device = png(), dpi = 300
+)
+dev.off()
+print (plotNchk10)
+```
+![Map of Grids with less than  10 checklists/Low ebird effort](figs/fig_number_checklists_lessthan10_25km.png)
+

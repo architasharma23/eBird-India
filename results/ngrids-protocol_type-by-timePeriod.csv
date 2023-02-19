@@ -1,0 +1,122 @@
+"protocol_type","timePeriod","n_grids"
+"Area","2000-2006",10
+"Area","2007-2010",21
+"Area","2011-2012",17
+"Area","2013",28
+"Area","2014",84
+"Area","2015",95
+"Area","2016",90
+"Area","2017",101
+"Area","2018",62
+"Area","2019",70
+"Area","2020",70
+"Area","2021",65
+"Area","2022",25
+"Area","pre2000",35
+"Banding","2007-2010",1
+"Banding","2014",2
+"Banding","2015",4
+"Banding","2016",8
+"Banding","2017",22
+"Banding","2018",30
+"Banding","2019",23
+"Banding","2020",24
+"Banding","2021",37
+"Banding","2022",16
+"Banding","pre2000",4
+"CWC Point Count","2014",1
+"CWC Point Count","2015",1
+"CWC Point Count","2017",4
+"CWC Point Count","2018",1
+"CWC Point Count","2019",2
+"eBird Pelagic Protocol","2000-2006",1
+"eBird Pelagic Protocol","2011-2012",3
+"eBird Pelagic Protocol","2013",3
+"eBird Pelagic Protocol","2014",1
+"eBird Pelagic Protocol","2015",2
+"eBird Pelagic Protocol","2016",3
+"eBird Pelagic Protocol","2017",16
+"eBird Pelagic Protocol","2018",18
+"eBird Pelagic Protocol","2019",18
+"eBird Pelagic Protocol","2020",16
+"eBird Pelagic Protocol","2021",15
+"eBird Pelagic Protocol","2022",16
+"Greater Gulf Refuge Waterbird Count","2014",1
+"Historical","2000-2006",731
+"Historical","2007-2010",806
+"Historical","2011-2012",818
+"Historical","2013",664
+"Historical","2014",774
+"Historical","2015",783
+"Historical","2016",827
+"Historical","2017",848
+"Historical","2018",813
+"Historical","2019",771
+"Historical","2020",589
+"Historical","2021",511
+"Historical","2022",306
+"Historical","pre2000",884
+"Incidental","2000-2006",478
+"Incidental","2007-2010",876
+"Incidental","2011-2012",804
+"Incidental","2013",700
+"Incidental","2014",773
+"Incidental","2015",879
+"Incidental","2016",1055
+"Incidental","2017",1240
+"Incidental","2018",1251
+"Incidental","2019",1578
+"Incidental","2020",1550
+"Incidental","2021",1910
+"Incidental","2022",1826
+"Incidental","pre2000",619
+"International Shorebird Survey (ISS)","2017",1
+"International Shorebird Survey (ISS)","2018",2
+"International Shorebird Survey (ISS)","2020",9
+"International Shorebird Survey (ISS)","2021",12
+"International Shorebird Survey (ISS)","2022",5
+"Nocturnal Flight Call Count","2015",5
+"Nocturnal Flight Call Count","2016",4
+"Nocturnal Flight Call Count","2017",29
+"Nocturnal Flight Call Count","2018",19
+"Nocturnal Flight Call Count","2019",29
+"Nocturnal Flight Call Count","2020",29
+"Nocturnal Flight Call Count","2021",32
+"Nocturnal Flight Call Count","2022",25
+"Oiled Birds","2020",1
+"Random","2018",1
+"Random","2019",2
+"Random","2020",1
+"Random","2021",11
+"Random","2022",3
+"Rusty Blackbird Spring Migration Blitz","2015",1
+"Rusty Blackbird Spring Migration Blitz","2016",1
+"Stationary","2000-2006",171
+"Stationary","2007-2010",313
+"Stationary","2011-2012",399
+"Stationary","2013",376
+"Stationary","2014",700
+"Stationary","2015",995
+"Stationary","2016",1285
+"Stationary","2017",1607
+"Stationary","2018",1755
+"Stationary","2019",2116
+"Stationary","2020",2067
+"Stationary","2021",2422
+"Stationary","2022",2261
+"Stationary","pre2000",197
+"Traveling","2000-2006",421
+"Traveling","2007-2010",609
+"Traveling","2011-2012",753
+"Traveling","2013",732
+"Traveling","2014",1171
+"Traveling","2015",1550
+"Traveling","2016",1834
+"Traveling","2017",2215
+"Traveling","2018",2468
+"Traveling","2019",2765
+"Traveling","2020",2693
+"Traveling","2021",3055
+"Traveling","2022",2995
+"Traveling","pre2000",494
+"Tricolored Blackbird Winter Survey","2017",1
